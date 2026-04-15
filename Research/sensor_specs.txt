@@ -1,0 +1,9 @@
+Accelerometer:
+Noise Density: 70 (mu)g / (Hz)^0.5
+Bandwidth: Up to ODR/2 (in LPF1 bypass mode). For example, at the maximum ODR of 6.66kHz, the bandwidth can reach approximately 3.3kHz.
+Bias: 20 mg
+
+Gyroscope:
+Noise Density: 3.8 mdps / (Hz)^0.5
+Bandwidth: Up to ODR/2 or restricted by digital filters. At a 6.66kHz ODR, the maximum cutoff frequency is approximately 937Hz depending on the selected filter configuration.
+Bias: 1dps

@@ -1,0 +1,2 @@
+The probabilty of a number being chosen can be mapped onto a bell curve. This makes it Gaussian.
+The next number to be chose is completly random. This makes it white noise.

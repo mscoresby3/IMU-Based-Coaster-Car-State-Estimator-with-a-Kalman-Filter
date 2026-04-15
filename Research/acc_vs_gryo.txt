@@ -1,0 +1,19 @@
+Accelerometer 
+Measures: Proper acceleration, linear motion, and changes in direction.
+Usage: Detecting shaking, tilting, and step counting (like in smartphones for portrait/landscape detection).
+Limitation: Less effective at detecting fast, complex rotations.
+Detectes non-gravity acceleration.
+
+Gyroscope
+Measures: Angular velocity (rotation speed around an axis).
+Usage: Detecting orientation, spinning, and precise gestures (like in VR headsets or controlling a camera).
+Limitation: Susceptible to "drift," meaning long-term accuracy can degrade without correction.
+Uses gravity to determine orientation.
+
+Key Differences
+Motion Type: Accelerometer handles linear motion; Gyroscope handles rotational motion.
+Gravity: Accelerometers are affected by gravity, allowing them to determine "down". Gyroscopes are not affected by gravity.
+Application: Both are used together for high-precision navigation, robotics, and smartphones to provide a complete picture of movement.
+
+
+When they are used together it is called an IMU (integrated motion unit).
