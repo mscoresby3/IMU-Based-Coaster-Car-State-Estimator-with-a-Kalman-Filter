@@ -1,0 +1,5 @@
+h(x) = 1.5 * ( cos( x / 2 ) + 1 )
+h'(x) = -0.75 * sin( x / 2 )
+angle(x) = -arctan( h'( x ) )
+acceleration(x) = g * sin( arctan( -h'( x ) ) )
+velocity(x) = sqrt( ( 2 * g * h( 0 ) ) - ( 2 * g * h( x ) ) )
