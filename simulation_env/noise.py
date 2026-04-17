@@ -30,7 +30,7 @@ def bias_noise(points: list, deviation: float = 0.1):
     noise_data = numpy.random.normal(mean, std_dev, num_samples)
 
     for i in range(len(points)):
-        points[i] += numpy.cumsum(noise_data)
+        points[i] += sum(noise_data[:i])
     
     return points
 
