@@ -1,6 +1,9 @@
 import numpy
 
 def additive_noise(points: list, deviation: float = 0.5):
+    """
+    Takes in a list of points and add gaussain white noise to it
+    """
     points = points[:]
     
     mean = 0
@@ -15,6 +18,9 @@ def additive_noise(points: list, deviation: float = 0.5):
     return points
 
 def bias_noise(points: list, deviation: float = 0.1):
+    """
+    Takes in a list of points and adds gaussain white noise to it with a bias over time
+    """
     points = points[:]
     
     mean = 0
@@ -24,7 +30,7 @@ def bias_noise(points: list, deviation: float = 0.1):
     noise_data = numpy.random.normal(mean, std_dev, num_samples)
 
     for i in range(len(points)):
-        points[i] += sum(noise_data[:i])
+        points[i] += numpy.cumsum(noise_data)
     
     return points
 
