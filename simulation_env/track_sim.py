@@ -2,63 +2,75 @@ import matplotlib.pyplot as plt
 import numpy
 
 MAX = 10
+g = 9.8
 
-def func():
+def func_generator(func, step: float = 0.5):
+    """
+    To be used in a list comprehension
+    func: lambda function
+    step: how far to increase
+    returns a generator
+    """
+    i = 0
+    while i < MAX:
+        yield func(i)
+        i += step
+
+# These are the functions that need to be changed if needed
+def height_func():
     return lambda x: 1.5 * (numpy.cos(x/2)+1)
 
-def func_generator_x(step: float = 0.5):
-    i = 0
-    while i < MAX:
-        yield func()(i)
-        i += step
+def der_height_func():
+    return lambda x: -0.75 * numpy.sin(x/2)
 
-def func_generator_y(step: float = 0.5):
-    i = 0
-    while i < MAX:
-        yield i
-        i += step
-
-def get_x_y(step: float = 0.5):
-    return [x for x in func_generator_y(step)], [y for y in func_generator_x(step)]
+# These functions are not changed
+def angle_func():
+    return lambda x: numpy.arctan(der_height_func()(x))
 
 def acceleration_func():
-    return lambda x: 9.8 * numpy.sin(numpy.arctan(0.75 * numpy.sin(0.5 * x)))
-
-def acceleration_generator(step: float = 0.5):
-    i = 0
-    while i < MAX:
-        yield acceleration_func()(i)
-        i += step
-
-def get_acceleration(step: float = 0.5):
-    return [y for y in acceleration_generator(step)]
+    return lambda x: g * numpy.sin(-angle_func()(x))
 
 def velocity_func():
-    return lambda x: numpy.sqrt((1.5 * (numpy.cos(0/2)+1)) - 1.5 * (numpy.cos(x/2)+1))
+    return lambda x: numpy.sqrt((2 * g * height_func()(0)) - (2 * g * height_func()(x)))
 
-def velocity_generator(step: float = 0.5):
-    i = 0
-    while i < MAX:
-        yield velocity_func()(i)
-        i += step
+# use these functions in main
+def get_x(step: float = 0.5):
+    return [x for x in func_generator(lambda x: x, step)]
+
+def get_height(step: float = 0.5):
+    return [h for h in func_generator(height_func(), step)]
+
+def get_der_height(step: float = 0.5):
+    return [d_h for d_h in func_generator(der_height_func(), step)]
+
+def get_angle(step: float = 0.5):
+    return [a for a in func_generator(angle_func(), step)]
+
+def get_acceleration(step: float = 0.5):
+    return [y for y in func_generator(acceleration_func(), step)]
 
 def get_velocity(step: float = 0.5):
-    return [v for v in velocity_generator(step)]
+    return [v for v in func_generator(velocity_func(), step)]
 
-def main():
+def test():
     step = 0.3
-    x_points, y_points = get_x_y(step)
+    x_points = get_x(step)
+    height_points = get_height(step)
+    d_h_points = get_der_height(step)
+    angle_points = get_angle(step)
     acc_points = get_acceleration(step)
     vec_points = get_velocity(step)
 
-    plt.plot(x_points, y_points, label='Height')
+    plt.plot(x_points, height_points, label='Height')
+    plt.plot(x_points, d_h_points, label='Derivative of Height')
+    plt.plot(x_points, angle_points, label='Angle')
     plt.plot(x_points, acc_points, label='Acceleration')
     plt.plot(x_points, vec_points, label='Velocity')
-    plt.ylim(-3, 7)
+    plt.ylim(-3, 8)
     plt.xlim(0, MAX)
     plt.legend()
-    plt.plot(x_points, [0 for _ in range(len(y_points))], color='k')
+    plt.plot(x_points, [0 for _ in range(len(x_points))], color='k')
     plt.show()
 
 if __name__ == "__main__":
-    main()
+    test()
