@@ -4,7 +4,7 @@ import numpy
 MAX = 10
 g = 9.8
 
-def func_generator(func, step: float = 0.5):
+def func_generator(func, step: float = 0.5, max: float = MAX):
     """
     To be used in a list comprehension
     func: lambda function
@@ -12,7 +12,7 @@ def func_generator(func, step: float = 0.5):
     returns a generator
     """
     i = 0
-    while i < MAX:
+    while i < max:
         yield func(i)
         i += step
 
@@ -33,24 +33,25 @@ def acceleration_func():
 def velocity_func():
     return lambda x: numpy.sqrt((2 * g * height_func()(0)) - (2 * g * height_func()(x)))
 
-# use these functions in main
-def get_x(step: float = 0.5):
-    return [x for x in func_generator(lambda x: x, step)]
+# use these functions
+def get_x(step: float = 0.5, max: float = MAX):
+    return [x for x in func_generator(lambda x: x, step, max=max)]
 
-def get_height(step: float = 0.5):
-    return [h for h in func_generator(height_func(), step)]
+def get_height(step: float = 0.5, max: float = MAX):
+    return [h for h in func_generator(height_func(), step, max=max)]
 
-def get_der_height(step: float = 0.5):
-    return [d_h for d_h in func_generator(der_height_func(), step)]
+def get_der_height(step: float = 0.5, max: float = MAX):
+    return [d_h for d_h in func_generator(der_height_func(), step, max=max)]
 
-def get_angle(step: float = 0.5):
-    return [a for a in func_generator(angle_func(), step)]
+def get_angle(step: float = 0.5, max: float = MAX):
+    return [a for a in func_generator(angle_func(), step, max=max)]
 
-def get_acceleration(step: float = 0.5):
-    return [y for y in func_generator(acceleration_func(), step)]
+def get_acceleration(step: float = 0.5, max: float = MAX):
+    return [y for y in func_generator(acceleration_func(), step, max=max)]
 
-def get_velocity(step: float = 0.5):
-    return [v for v in func_generator(velocity_func(), step)]
+def get_velocity(step: float = 0.5, max: float = MAX):
+    return [v for v in func_generator(velocity_func(), step, max=max)]
+
 
 def test():
     step = 0.3
