@@ -4,29 +4,32 @@ import physics_funcs
 import noise
 
 def main():
-    step = 0.5
+    step = 0.3
 
     x_points = physics_funcs.get_x(step)
     height_points = physics_funcs.get_height(step)
     angle_points = physics_funcs.get_angle(step)
     acc_points = physics_funcs.get_acceleration(step)
+    vec_points = physics_funcs.get_velocity(step)
 
-    height_points_noise = noise.create_noise(height_points)
-    angle_points_noise = noise.create_noise(angle_points)
-    acc_points_noise = noise.create_noise(acc_points)
+    angle_points_noise = noise.bias_noise(angle_points, 0.2)
+    acc_points_noise = noise.additive_noise(acc_points)
 
-    plt.plot(x_points, height_points, label='Height')
+    plt.plot(x_points, vec_points, label='Velocity')
+
+    plt.plot(x_points, height_points, label='Actual Height')
     plt.plot(x_points, angle_points, label='Actual Angle')
     plt.plot(x_points, acc_points, label='Actual Acceleration')
 
     plt.plot(x_points, angle_points_noise, label='Noise Angle')
     plt.plot(x_points, acc_points_noise, label='Noise Acceleration')
 
-    plt.ylim(-3, 7)
+    plt.ylim(-3, 8)
     plt.xlim(0, physics_funcs.MAX)
     plt.legend()
     plt.plot(x_points, [0 for _ in range(len(x_points))], color='k')
     plt.show()
+    plt.clf()
 
 if __name__ == "__main__":
     main()
