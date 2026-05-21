@@ -1,6 +1,6 @@
 import numpy
 
-def additive_noise(points: list, deviation: float = 0.5):
+def additive_noise(points: list, deviation: float = 0.3, max = 1):
     """
     Takes in a list of points and add gaussain white noise to it
     """
@@ -14,6 +14,10 @@ def additive_noise(points: list, deviation: float = 0.5):
 
     for i in range(len(points)):
         points[i] += noise_data[i]
+        if points[i] > max:
+            points[i] = max
+        elif points[i] < -1 * max:
+            points[i] = -1 * max
     
     return points
 
@@ -36,7 +40,9 @@ def bias_noise(points: list, deviation: float = 0.1):
     
     return points
 
-def test():
+if __name__ == "__main__":
+    print('The code that is now running is for testing')
+
     import matplotlib.pyplot as plt
     import physics_funcs
 
@@ -50,6 +56,3 @@ def test():
     plt.plot(x_points, O_points_bias, label='Bias Noise')
     plt.legend()
     plt.show()
-
-if __name__ == "__main__":
-    test()
