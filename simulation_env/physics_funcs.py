@@ -1,8 +1,6 @@
-import matplotlib.pyplot as plt
 import numpy
 
-MAX = 10
-g = 9.8
+MAX = 20
 
 def func_generator(func, step: float = 0.5, max: float = MAX):
     """
@@ -16,73 +14,72 @@ def func_generator(func, step: float = 0.5, max: float = MAX):
         yield func(i)
         i += step
 
-# These are the functions that need to be changed if needed
-def height_func():
-    return lambda x: 1.5 * (numpy.cos(x/2)+1)
+# edit these functions
+def angle(time):
+    return numpy.sin( ( time / 4 ) ** 2)
 
-def der_height_func():
-    return lambda x: -0.75 * numpy.sin(x/2)
+def der_angle(time):
+    return numpy.cos( (time / 4) ** 2) * (time / 8)
 
-def doub_der_height_func():
-    return lambda x: -0.375 * numpy.cos(x/2)
+def acceleration(time):
+    return numpy.cos( time ) + 0.5
 
-# These functions are not changed
-def angle_func():
-    return lambda x: numpy.arctan(der_height_func()(x))
+# don't touch these functions but feel free to use them
 
-def der_angle_func():
-    return lambda x: doub_der_height_func()(x) / ( ( der_height_func()(x) ** 2 ) + 1 )
+def a_x(time):
+    return acceleration(time) * numpy.cos( angle(time) )
 
-def acceleration_func():
-    return lambda x: g * numpy.sin(-angle_func()(x))
-
-def velocity_func():
-    return lambda x: numpy.sqrt((2 * g * height_func()(0)) - (2 * g * height_func()(x)))
-
-# use these functions
-def get_x(step: float = 0.5, max: float = MAX):
-    return [x for x in func_generator(lambda x: x, step, max=max)]
-
-def get_height(step: float = 0.5, max: float = MAX):
-    return [h for h in func_generator(height_func(), step, max=max)]
-
-def get_der_height(step: float = 0.5, max: float = MAX):
-    return [d_h for d_h in func_generator(der_height_func(), step, max=max)]
-
-def get_angle(step: float = 0.5, max: float = MAX):
-    return [a for a in func_generator(angle_func(), step, max=max)]
-
-def get_der_angle(step: float = 0.5, max: float = MAX):
-    return [d_a for d_a in func_generator(der_angle_func(), step=step, max=max)]
-
-def get_acceleration(step: float = 0.5, max: float = MAX):
-    return [y for y in func_generator(acceleration_func(), step, max=max)]
-
-def get_velocity(step: float = 0.5, max: float = MAX):
-    return [v for v in func_generator(velocity_func(), step, max=max)]
+def a_y(time):
+    return acceleration(time) * numpy.sin( angle(time) )
 
 
-def test():
-    step = 0.3
-    x_points = get_x(step)
-    height_points = get_height(step)
-    d_h_points = get_der_height(step)
-    angle_points = get_angle(step)
-    der_angle_points = get_der_angle(step)
-    acc_points = get_acceleration(step)
-    vec_points = get_velocity(step)
+def get_time(step = 0.5, max = MAX):
+    return [t for t in func_generator(lambda x: x, step, max)]
 
-    plt.plot(x_points, height_points, label='Height')
-    plt.plot(x_points, d_h_points, label='Derivative of Height')
-    plt.plot(x_points, angle_points, label='Angle')
-    plt.plot(x_points, der_angle_points, label='Derivative of Angle')
-    plt.plot(x_points, acc_points, label='Acceleration')
-    plt.plot(x_points, vec_points, label='Velocity')
-    plt.ylim(-3, 8)
-    plt.xlim(0, MAX)
-    plt.legend()
-    plt.plot(x_points, [0 for _ in range(len(x_points))], color='k')
-    plt.show()
+def get_acceleration(step = 0.5, max = MAX):
+    return [a for a in func_generator(acceleration, step, max)]
+
+def get_angle(step = 0.5, max = MAX):
+    return [a for a in func_generator(angle, step, max)]
+
+def get_der_angle(step = 0.5, max = MAX):
+    return [d_a for d_a in func_generator(der_angle, step, max)]
+
+def get_x_and_y(step = 0.5, max = MAX):
+    x = [0]
+    y = [0]
+    v_x = [0]
+    v_y = [0]
+    acc = get_acceleration(step=step, max=max)
+    angle = get_angle(step=step, max=max)
+    for i in range(len(acc) - 1):
+        v_x.append(v_x[-1] + (acc[i] * numpy.cos(angle[i]) * step))
+        v_y.append(v_y[-1] + (acc[i] * numpy.sin(angle[i]) * step))
+
+        x.append(x[-1] + (v_x[-1] * step))
+        y.append(y[-1] + (v_y[-1] * step))
+    
+    return x, y
 
 if __name__ == "__main__":
-    test()
+    import matplotlib.pyplot as plt
+
+    step = 0.2
+
+    time_points = get_time(step=step)
+    acceleration_points = get_acceleration(step=step)
+    angle_points = get_angle(step=step)
+    der_angle_points = get_der_angle(step=step)
+    x, y = get_x_and_y(step=step)
+
+    plt.plot(time_points, acceleration_points, label='Acceleration')
+    plt.plot(time_points, angle_points, label='Angle')
+    plt.plot(time_points, der_angle_points, label="Angle'")
+    plt.legend()
+    plt.plot(time_points, [0 for _ in range(len(time_points))], color='k')
+    plt.show()
+    plt.clf()
+
+    plt.plot(x, y)
+    plt.scatter(x, y)
+    plt.show()

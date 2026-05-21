@@ -1,7 +1,4 @@
-h(x) = 1.5 * ( cos( x / 2 ) + 1 )
-h'(x) = -0.75 * sin( x / 2 )
-h''(x) = -0.375 * cos( x / 2 )
-angle(x) = -arctan( h'( x ) )
-angle'(x) = h''(x) / ( h'(x) + 1 )
-acceleration(x) = g * sin( arctan( -h'( x ) ) )
-velocity(x) = sqrt( ( 2 * g * h( 0 ) ) - ( 2 * g * h( x ) ) )
+angle(t) = sin( ( t / 4 ) ^ 2 )
+a(t) = cos( t ) + 0.5
+a_x(t) = a(t) * cos( angle(t) )
+a_y(t) = a(t) * sin( angle(t) )

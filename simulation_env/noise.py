@@ -29,8 +29,10 @@ def bias_noise(points: list, deviation: float = 0.1):
 
     noise_data = numpy.random.normal(mean, std_dev, num_samples)
 
+    current = 0
     for i in range(len(points)):
-        points[i] += numpy.cumsum(noise_data)
+        current += noise_data[i]
+        points[i] += current
     
     return points
 
@@ -38,7 +40,7 @@ def test():
     import matplotlib.pyplot as plt
     import physics_funcs
 
-    x_points = physics_funcs.get_x(max=20)
+    x_points = physics_funcs.get_time(max=20)
     O_points = [0 for _ in range(len(x_points))]
     O_points_noise = additive_noise(O_points)
     O_points_bias = bias_noise(O_points)
